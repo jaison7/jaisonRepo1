@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  # 1. PostgreSQL Database Service
+  db:
+    image: postgres:15-alpine
+    container_name: postgres_db
+    restart: always
+    environment:
+      # Use variables from the .env file
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      # Map container port 5432 to host port 5432 (optional, but helpful for debugging)
+      - "5432:5432"
+    volumes:
+      # Persist data to prevent loss on container restart
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # 2. Spring Boot Application Service
+  app:
+    # Use the local Dockerfile to build the application image
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rag_chat_api
+    # Load environment variables from the external .env file
+    env_file:
+      - .env
+    ports:
+      # Expose the application on host port 8080
+      - "8080:8080"
+    depends_on:
+      # Ensure the database is healthy before starting the application
+      db:
+        condition: service_healthy
+    restart: on-failure
+
+volumes:
+  postgres_data:

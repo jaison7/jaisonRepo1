@@ -1,0 +1,62 @@
+// --- Build Configuration (build.gradle) ---
+// Uses the Groovy DSL
+
+plugins {
+    // Apply the Spring Boot plugin to manage dependencies and build executable jars
+    id 'org.springframework.boot' version '3.2.0'
+    
+    // Apply the Spring Dependency Management plugin to control versions
+    id 'io.spring.dependency-management' version '1.1.4'
+    
+    // Apply the standard Java plugin
+    id 'java'
+}
+
+group = 'com.rag.chat'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // --- Spring Boot Starters (Core Functionality) ---
+    
+    // Core Web Starter: RESTful APIs, embedded Tomcat
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    
+    // JPA Starter: Database interaction using Hibernate
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    
+    // Security Starter: API Key Authentication
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    
+    // Spring Boot Actuator: Health Checks (Bonus)
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    // --- Third-Party and Utility Dependencies ---
+
+    // Springdoc OpenAPI (Swagger): API Documentation (Bonus)
+    // Note: The version must be specified here since it's not managed by the parent
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+    
+    // Configuration Processor for IDE support (Optional but good practice)
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    
+    // PostgreSQL Driver (Runtime dependency)
+    runtimeOnly 'org.postgresql:postgresql'
+
+    // --- Testing Dependencies ---
+    
+    // Core Spring Boot Test Starter
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    
+    // Spring Security Test for testing secure endpoints
+    testImplementation 'org.springframework.security:spring-security-test'
+}
+
+// Configuration for Java compilation and tasks
+tasks.named('test') {
+    useJUnitPlatform()
+}

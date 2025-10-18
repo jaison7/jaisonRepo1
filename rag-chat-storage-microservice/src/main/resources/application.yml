@@ -1,0 +1,27 @@
+server:
+  port: 8080
+
+spring:
+  # Database Configuration (PostgreSQL)
+  datasource:
+    # --- FIX: Removed escaped backslashes for correct environment variable interpolation ---
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    # -------------------------------------------------------------------------------------
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update 
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect 
+  
+  # Configuration for Security and App Defaults
+app:
+  api:
+    key: ${API_KEY} # Read from environment variable
+  default:
+    user-id: "default_rag_user" # Placeholder until proper user management is implemented
